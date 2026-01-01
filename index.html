@@ -5,7 +5,7 @@
   <title>Access</title>
 </head>
 <body>
-
+<p id="warning">Aguarde.</p>
   <h2>Enter the password</h2>
 
   <input type="password" id="password">
@@ -23,6 +23,11 @@
       }
     }
   </script>
-
+<script>
+  setTimeout(() => {
+    document.getElementById("warning").innerText =
+      "Você ficou tempo demais aqui.";
+  }, 5000);
+</script>
 </body>
 </html>

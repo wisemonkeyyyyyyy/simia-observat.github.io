@@ -17,21 +17,12 @@
       const input = document.getElementById("password").value;
 
       if (input === correctPassword) {
-        alert("Access granted");
+        window.location.href = "secret.html";
       } else {
-        alert("Access denied");
+        alert("Access denied.");
       }
     }
   </script>
 
-
-<p>Observation precedes language
-  A?si=whvRHjxsqSuCIJYf</p>
-
-<hr>
-
-<h2>Enter the password</h2>
-<input type="password" id="password">
-<button onclick="check()">Unlock</button>
 </body>
 </html>

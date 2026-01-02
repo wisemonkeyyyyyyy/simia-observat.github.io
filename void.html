@@ -11,14 +11,15 @@
     font-family: monospace;
     overflow: hidden;
     text-align: center;
+    transition: background-color 0.05s, filter 0.2s;
   }
 
-  /* TEXTO BUGADO */
+  /* TEXTO PRINCIPAL BUGADO */
   .glitch {
     position: relative;
     font-size: 2em;
     margin-top: 30vh;
-    animation: flicker 0.15s infinite;
+    animation: flicker 0.12s infinite;
   }
 
   .glitch::before,
@@ -32,29 +33,29 @@
 
   .glitch::before {
     color: red;
-    animation: glitch1 0.2s infinite;
+    animation: glitch1 0.15s infinite;
   }
 
   .glitch::after {
     color: cyan;
-    animation: glitch2 0.25s infinite;
+    animation: glitch2 0.18s infinite;
   }
 
   @keyframes glitch1 {
-    0% { transform: translate(2px, -2px); }
-    50% { transform: translate(-2px, 2px); }
-    100% { transform: translate(2px, -2px); }
+    0% { transform: translate(3px, -3px); }
+    50% { transform: translate(-3px, 3px); }
+    100% { transform: translate(3px, -3px); }
   }
 
   @keyframes glitch2 {
-    0% { transform: translate(-2px, 2px); }
-    50% { transform: translate(2px, -2px); }
-    100% { transform: translate(-2px, 2px); }
+    0% { transform: translate(-3px, 3px); }
+    50% { transform: translate(3px, -3px); }
+    100% { transform: translate(-3px, 3px); }
   }
 
   @keyframes flicker {
     0% { opacity: 1; }
-    50% { opacity: 0.3; }
+    50% { opacity: 0.2; }
     100% { opacity: 1; }
   }
 
@@ -63,14 +64,14 @@
     margin-top: 40px;
     font-size: 0.9em;
     opacity: 0.4;
-    animation: shake 0.3s infinite;
+    animation: shake 0.25s infinite;
   }
 
   @keyframes shake {
     0% { transform: translateX(0); }
-    25% { transform: translateX(-2px); }
-    50% { transform: translateX(2px); }
-    75% { transform: translateX(-2px); }
+    25% { transform: translateX(-3px); }
+    50% { transform: translateX(3px); }
+    75% { transform: translateX(-3px); }
     100% { transform: translateX(0); }
   }
 
@@ -80,7 +81,7 @@
     bottom: 5px;
     right: 5px;
     font-size: 0.6em;
-    opacity: 0.05;
+    opacity: 0.04;
     transform: rotate(180deg);
   }
 
@@ -91,139 +92,118 @@
     left: 0;
     pointer-events: none;
   }
-
-  /* FLASH */
-  .flash {
-    background-color: white !important;
-  }
 </style>
 </head>
 
 <body>
 
-  <!-- MENSAGEM CLARA (MAS MENTIROSA) -->
   <div class="glitch" data-text="That's not the way. The banana is your friend.">
     That's not the way. The banana is your friend.
   </div>
 
-  <!-- AVISO DE CORRUPÇÃO -->
   <div id="lie">
     SIGNAL CORRUPTED · SOURCE UNVERIFIED
   </div>
 
-  <!-- VERDADE ESCONDIDA -->
   <div id="hidden">
     He was never an enemy, but the being from the kingdom of darkness wants your harm
   </div>
 
-  <!-- INTERFERÊNCIA -->
   <canvas id="noise"></canvas>
 
 <script>
-const canvas = document.getElementById("noise");
-const ctx = canvas.getContext("2d");
+  /* ===== RUÍDO VISUAL ===== */
+  const canvas = document.getElementById("noise");
+  const ctx = canvas.getContext("2d");
 
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
 
-let corruption = 0;
-let destroyed = false;
-
-/* RUÍDO */
-function noise() {
-  const imgData = ctx.createImageData(canvas.width, canvas.height);
-  for (let i = 0; i < imgData.data.length; i += 4) {
-    const v = Math.random() * 255;
-    imgData.data[i] = v;
-    imgData.data[i+1] = v;
-    imgData.data[i+2] = v;
-    imgData.data[i+3] = 30 + corruption * 8;
-  }
-  ctx.putImageData(imgData, 0, 0);
-}
-setInterval(noise, 80);
-
-/* FLASH BRANCO */
-function whiteFlash() {
-  document.body.classList.add("flash");
-  setTimeout(() => {
-    document.body.classList.remove("flash");
-  }, 40);
-}
-
-/* FLASH RARO */
-setInterval(() => {
-  if (Math.random() < 0.25) whiteFlash();
-}, 6000);
-
-/* CORRUPÇÃO PROGRESSIVA */
-const collapse = setInterval(() => {
-  corruption++;
-
-  document.body.style.filter =
-    `blur(${corruption * 0.25}px) contrast(${120 + corruption * 12}%)`;
-
-  const glitch = document.querySelector(".glitch");
-  glitch.style.transform =
-    `translate(${Math.random()*corruption}px, ${Math.random()*corruption}px)
-     rotate(${Math.random()*corruption}deg)`;
-
-  glitch.style.letterSpacing = corruption + "px";
-
-  const hidden = document.getElementById("hidden");
-  hidden.style.opacity = Math.min(0.05 + corruption * 0.03, 0.7);
-
-  if (Math.random() < 0.4) whiteFlash();
-
-  if (corruption > 10 && !destroyed) {
-    destroyed = true;
-    finalCollapse();
-  }
-}, 5000);
-
-/* COLAPSO FINAL */
-function finalCollapse() {
-  const glitch = document.querySelector(".glitch");
-
-  const end = document.createElement("div");
-  end.innerText = "LANGUAGE FAILED";
-  end.style.position = "fixed";
-  end.style.top = "50%";
-  end.style.left = "50%";
-  end.style.transform = "translate(-50%, -50%)";
-  end.style.color = "red";
-  end.style.fontSize = "3em";
-  end.style.opacity = "0.8";
-  document.body.appendChild(end);
-
-  let text = glitch.innerText;
-  const erode = setInterval(() => {
-    if (text.length <= 3) {
-      glitch.innerText = "...";
-      clearInterval(erode);
-      return;
+  function noise() {
+    const imgData = ctx.createImageData(canvas.width, canvas.height);
+    for (let i = 0; i < imgData.data.length; i += 4) {
+      const val = Math.random() * 255;
+      imgData.data[i] = val;
+      imgData.data[i + 1] = val;
+      imgData.data[i + 2] = val;
+      imgData.data[i + 3] = 30;
     }
-    text = text.slice(0, -1);
-    glitch.innerText = text;
-  }, 700);
+    ctx.putImageData(imgData, 0, 0);
+  }
 
-  canvas.style.opacity = 0.8;
+  setInterval(noise, 80);
 
-  setTimeout(() => {
-    document.body.innerHTML = "";
-    document.body.style.background = "black";
+  /* ===== CORRUPÇÃO PROGRESSIVA ===== */
+  let corruption = 0;
+  let collapsed = false;
 
-    const last = document.createElement("div");
-    last.innerText = "OBSERVATION WITHOUT INTERFACE";
-    last.style.color = "white";
-    last.style.opacity = "0.4";
-    last.style.fontFamily = "monospace";
-    last.style.position = "fixed";
-    last.style.bottom = "10px";
-    last.style.right = "10px";
-    document.body.appendChild(last);
-  }, 12000);
-}
+  const corruptionInterval = setInterval(() => {
+    if (collapsed) return;
+
+    corruption++;
+
+    // distorção visual
+    document.body.style.filter =
+      `contrast(${1 + corruption * 0.25}) 
+       saturate(${1 + corruption * 0.35}) 
+       hue-rotate(${corruption * 12}deg)`;
+
+    // flash branco de 1 frame
+    document.body.style.backgroundColor = "white";
+    setTimeout(() => {
+      document.body.style.backgroundColor = "black";
+    }, 30);
+
+    if (corruption >= 6) {
+      clearInterval(corruptionInterval);
+      finalCollapse();
+    }
+  }, 2000); // MAIS RÁPIDO
+
+  /* ===== COLAPSO FINAL ===== */
+  function finalCollapse() {
+    collapsed = true;
+
+    const glitch = document.querySelector(".glitch");
+
+    const end = document.createElement("div");
+    end.innerText = "LANGUAGE FAILED";
+    end.style.position = "fixed";
+    end.style.top = "50%";
+    end.style.left = "50%";
+    end.style.transform = "translate(-50%, -50%)";
+    end.style.color = "red";
+    end.style.fontSize = "3em";
+    end.style.opacity = "0.85";
+    document.body.appendChild(end);
+
+    let text = glitch.innerText;
+
+    const erode = setInterval(() => {
+      if (text.length <= 3) {
+        glitch.innerText = "...";
+        clearInterval(erode);
+        return;
+      }
+      text = text.slice(0, -1);
+      glitch.innerText = text;
+    }, 250); // erosão rápida
+
+    setTimeout(() => {
+      document.body.innerHTML = "";
+      document.body.style.background = "black";
+
+      const last = document.createElement("div");
+      last.innerText = "OBSERVATION WITHOUT INTERFACE";
+      last.style.color = "white";
+      last.style.opacity = "0.4";
+      last.style.fontFamily = "monospace";
+      last.style.position = "fixed";
+      last.style.bottom = "10px";
+      last.style.right = "10px";
+      document.body.appendChild(last);
+    }, 6000);
+  }
 </script>
 
 </body>

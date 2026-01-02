@@ -40,19 +40,18 @@
     cursor: pointer;
   }
 
-  /* ===== OLHO MACABRO ===== */
+  /* ===== OLHO MACABRO SEMPRE VISÍVEL ===== */
   #eye {
     position: fixed;
     bottom: 30px;
     left: 30px;
-    width: 40px;       /* maior */
-    height: 20px;      /* maior */
-    border: 2px solid red;  /* traço mais forte e macabro */
+    width: 50px;        /* maior */
+    height: 25px;       /* maior */
+    border: 2px solid red;  /* contorno macabro */
     border-radius: 50%;
-    opacity: 0.4;      /* mais visível */
+    opacity: 0.7;       /* sempre claro */
     cursor: pointer;
-    animation: blink 10s infinite; /* pisca lentamente */
-    box-shadow: 0 0 15px red; /* efeito assustador */
+    box-shadow: 0 0 20px red; /* efeito assustador */
   }
 
   #eye::after {
@@ -60,19 +59,14 @@
     position: absolute;
     top: 50%;
     left: 50%;
-    width: 6px;        /* pupila maior */
-    height: 6px;
-    background: red;   /* pupila vermelha para efeito macabro */
+    width: 8px;         /* pupila maior */
+    height: 8px;
+    background: red;    /* pupila vermelha */
     border-radius: 50%;
     transform: translate(-50%, -50%);
+    box-shadow: 0 0 10px red; /* pupila brilhante */
   }
 
-  @keyframes blink {
-    0% { opacity: 0.4; }
-    8% { opacity: 0.8; }
-    16% { opacity: 0.4; }
-    100% { opacity: 0.4; }
-  }
 </style>
 </head>
 
@@ -90,7 +84,7 @@ x8_-y6qpiY1Rmb2PJDtn19CJdilfOWAuQ24adMvpy6W_jJxtB25dvJtJm_ysDinW8d1G553JYPVuOELV
   <button onclick="check()">Unlock</button>
 </div>
 
-<!-- OLHO -->
+<!-- OLHO SEMPRE VISÍVEL -->
 <div id="eye"></div>
 
 <script>
@@ -101,7 +95,6 @@ x8_-y6qpiY1Rmb2PJDtn19CJdilfOWAuQ24adMvpy6W_jJxtB25dvJtJm_ysDinW8d1G553JYPVuOELV
   // OLHO ATIVA O CAMPO SECRETO
   eye.addEventListener("click", () => {
     gate.style.display = "block";
-    eye.style.display = "none";
     warning.innerText = "Observation acknowledged.";
   });
 

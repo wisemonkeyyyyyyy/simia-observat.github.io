@@ -58,16 +58,6 @@
     100% { opacity: 1; }
   }
 
-  /* MENSAGEM ESCONDIDA */
-  #hidden {
-    position: absolute;
-    bottom: 5px;
-    right: 5px;
-    font-size: 0.6em;
-    opacity: 0.05;
-    transform: rotate(180deg);
-  }
-
   /* INDÍCIO DE MENTIRA */
   #lie {
     margin-top: 40px;
@@ -84,12 +74,27 @@
     100% { transform: translateX(0); }
   }
 
-  /* INTERFERÊNCIA */
+  /* MENSAGEM ESCONDIDA */
+  #hidden {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    font-size: 0.6em;
+    opacity: 0.05;
+    transform: rotate(180deg);
+  }
+
+  /* RUÍDO */
   canvas {
     position: fixed;
     top: 0;
     left: 0;
     pointer-events: none;
+  }
+
+  /* FLASH */
+  .flash {
+    background-color: white !important;
   }
 </style>
 </head>
@@ -101,39 +106,124 @@
     That's not the way. The banana is your friend.
   </div>
 
-  <!-- INDÍCIO DE QUE É MENTIRA -->
+  <!-- AVISO DE CORRUPÇÃO -->
   <div id="lie">
     SIGNAL CORRUPTED · SOURCE UNVERIFIED
   </div>
 
-  <!-- MENSAGEM ESCONDIDA -->
+  <!-- VERDADE ESCONDIDA -->
   <div id="hidden">
-    the wise was never an enemy, but the being from the kingdom of darkness wants your harm
+    He was never an enemy, but the being from the kingdom of darkness wants your harm
   </div>
 
-  <!-- RUÍDO VISUAL -->
+  <!-- INTERFERÊNCIA -->
   <canvas id="noise"></canvas>
 
 <script>
-  const canvas = document.getElementById("noise");
-  const ctx = canvas.getContext("2d");
+const canvas = document.getElementById("noise");
+const ctx = canvas.getContext("2d");
 
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
 
-  function noise() {
-    const imgData = ctx.createImageData(canvas.width, canvas.height);
-    for (let i = 0; i < imgData.data.length; i += 4) {
-      const val = Math.random() * 255;
-      imgData.data[i] = val;
-      imgData.data[i + 1] = val;
-      imgData.data[i + 2] = val;
-      imgData.data[i + 3] = 20;
-    }
-    ctx.putImageData(imgData, 0, 0);
+let corruption = 0;
+let destroyed = false;
+
+/* RUÍDO */
+function noise() {
+  const imgData = ctx.createImageData(canvas.width, canvas.height);
+  for (let i = 0; i < imgData.data.length; i += 4) {
+    const v = Math.random() * 255;
+    imgData.data[i] = v;
+    imgData.data[i+1] = v;
+    imgData.data[i+2] = v;
+    imgData.data[i+3] = 30 + corruption * 8;
   }
+  ctx.putImageData(imgData, 0, 0);
+}
+setInterval(noise, 80);
 
-  setInterval(noise, 100);
+/* FLASH BRANCO */
+function whiteFlash() {
+  document.body.classList.add("flash");
+  setTimeout(() => {
+    document.body.classList.remove("flash");
+  }, 40);
+}
+
+/* FLASH RARO */
+setInterval(() => {
+  if (Math.random() < 0.25) whiteFlash();
+}, 6000);
+
+/* CORRUPÇÃO PROGRESSIVA */
+const collapse = setInterval(() => {
+  corruption++;
+
+  document.body.style.filter =
+    `blur(${corruption * 0.25}px) contrast(${120 + corruption * 12}%)`;
+
+  const glitch = document.querySelector(".glitch");
+  glitch.style.transform =
+    `translate(${Math.random()*corruption}px, ${Math.random()*corruption}px)
+     rotate(${Math.random()*corruption}deg)`;
+
+  glitch.style.letterSpacing = corruption + "px";
+
+  const hidden = document.getElementById("hidden");
+  hidden.style.opacity = Math.min(0.05 + corruption * 0.03, 0.7);
+
+  if (Math.random() < 0.4) whiteFlash();
+
+  if (corruption > 10 && !destroyed) {
+    destroyed = true;
+    finalCollapse();
+  }
+}, 5000);
+
+/* COLAPSO FINAL */
+function finalCollapse() {
+  const glitch = document.querySelector(".glitch");
+
+  const end = document.createElement("div");
+  end.innerText = "LANGUAGE FAILED";
+  end.style.position = "fixed";
+  end.style.top = "50%";
+  end.style.left = "50%";
+  end.style.transform = "translate(-50%, -50%)";
+  end.style.color = "red";
+  end.style.fontSize = "3em";
+  end.style.opacity = "0.8";
+  document.body.appendChild(end);
+
+  let text = glitch.innerText;
+  const erode = setInterval(() => {
+    if (text.length <= 3) {
+      glitch.innerText = "...";
+      clearInterval(erode);
+      return;
+    }
+    text = text.slice(0, -1);
+    glitch.innerText = text;
+  }, 700);
+
+  canvas.style.opacity = 0.8;
+
+  setTimeout(() => {
+    document.body.innerHTML = "";
+    document.body.style.background = "black";
+
+    const last = document.createElement("div");
+    last.innerText = "OBSERVATION WITHOUT INTERFACE";
+    last.style.color = "white";
+    last.style.opacity = "0.4";
+    last.style.fontFamily = "monospace";
+    last.style.position = "fixed";
+    last.style.bottom = "10px";
+    last.style.right = "10px";
+    document.body.appendChild(last);
+  }, 12000);
+}
 </script>
 
 </body>

@@ -1,1 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>banana</title>
 
+<style>
+  body {
+    background-color: #fffbe6;
+    color: #2b2b2b;
+    font-family: monospace;
+    text-align: center;
+    margin-top: 25vh;
+  }
+
+  h1 {
+    color: #d4aa00;
+    font-size: 2.5em;
+  }
+
+  #main {
+    font-size: 1.1em;
+    margin-top: 20px;
+  }
+
+  #reassure {
+    margin-top: 30px;
+    font-size: 0.9em;
+    color: #666;
+  }
+
+  /* texto quase invisível */
+  #hidden {
+    margin-top: 60px;
+    font-size: 0.6em;
+    color: #fffbe6; /* mesma cor do fundo */
+    user-select: text;
+  }
+
+  /* detalhe inquietante */
+  #small {
+    margin-top: 40px;
+    font-size: 0.7em;
+    opacity: 0.3;
+  }
+
+  @keyframes blink {
+    0%, 97%, 100% { opacity: 1; }
+    98% { opacity: 0; }
+  }
+
+  #blink {
+    animation: blink 6s infinite;
+  }
+</style>
+</head>
+
+<body>
+
+  <h1>🍌</h1>
+
+  <p id="main">
+    You chose the correct path.
+  </p>
+
+  <p id="reassure">
+    The banana is your friend.
+  </p>
+
+  <p id="blink">
+    Nothing here will harm you.
+  </p>
+
+  <p id="small">
+    Friends do not need to insist.
+  </p>
+
+  <!-- FRASE ESCONDIDA -->
+  <p id="hidden">
+    aHR0cHM6Ly95b3V0dS5iZS80VzI4VzVGd1hxQT9zaT1Vci0tMkxqN2RkVFZSNGU=
+  </p>
+
+<script>
+  setTimeout(() => {
+    document.getElementById("reassure").innerText =
+      "The banana only wants to protect you.";
+  }, 8000);
+
+  setTimeout(() => {
+    document.getElementById("small").innerText =
+      "Protection sometimes requires silence.";
+  }, 16000);
+</script>
+
+</body>
+</html>

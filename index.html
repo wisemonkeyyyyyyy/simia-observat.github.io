@@ -1,88 +1,139 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <title>Access</title>
+<meta charset="UTF-8">
+<title>Access</title>
 
-  <style>
-    body {
-      background-color: black;
-      color: white;
-      font-family: monospace;
-      text-align: center;
-      margin-top: 30vh;
-    }
+<style>
+  body {
+    background-color: black;
+    color: white;
+    font-family: monospace;
+    text-align: center;
+    margin-top: 30vh;
+    overflow: hidden;
+  }
 
-    input {
-      background: black;
-      color: white;
-      border: 1px solid white;
-      padding: 8px;
-      margin-top: 15px;
-    }
+  #warning {
+    margin-bottom: 20px;
+  }
 
-    button {
-      margin-top: 10px;
-      padding: 8px 16px;
-      background: black;
-      color: white;
-      border: 1px solid white;
-      cursor: pointer;
-    }
+  /* ===== CAMPO SECRETO (INEXISTENTE ATÉ O OLHO) ===== */
+  #gate {
+    display: none;
+  }
 
-    #warning {
-      margin-bottom: 20px;
-    }
-  </style>
+  input {
+    background: black;
+    color: white;
+    border: 1px solid white;
+    padding: 8px;
+    margin-top: 15px;
+  }
+
+  button {
+    margin-top: 10px;
+    padding: 6px 14px;
+    background: black;
+    color: white;
+    border: 1px solid white;
+    cursor: pointer;
+  }
+
+  /* ===== OLHO ===== */
+  #eye {
+    position: fixed;
+    bottom: 15px;
+    left: 15px;
+    width: 18px;
+    height: 10px;
+    border: 1px solid white;
+    border-radius: 50%;
+    opacity: 0;
+    cursor: pointer;
+    animation: blink 8s infinite;
+  }
+
+  #eye::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 3px;
+    height: 3px;
+    background: white;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  @keyframes blink {
+    0% { opacity: 0; }
+    8% { opacity: 0.15; }
+    16% { opacity: 0; }
+    100% { opacity: 0; }
+  }
+</style>
 </head>
 
 <body>
 
-  <!-- TEXTO INICIAL / MENSAGEM -->
-  <p id="warning">
-    x8_-y6qpiY1Rmb2PJDtn19CJdilfOWAuQ24adMvpy6W_jJxtB25dvJtJm_ysDinW8d1G553JYPVuOELVAbaCs6W9MFod_RUROGT5VGtFCju_78x5gzD78DxABmDtEXN3
-  </p>
+<!-- TEXTO INICIAL -->
+<p id="warning">
+x8_-y6qpiY1Rmb2PJDtn19CJdilfOWAuQ24adMvpy6W_jJxtB25dvJtJm_ysDinW8d1G553JYPVuOELVAbaCs6W9MFod_RUROGT5VGtFCju_78x5gzD78DxABmDtEXN3
+</p>
 
-  <h2>Enter password</h2>
-
-  <!-- CAMPO DE SENHA -->
-  <input type="password" id="password">
+<!-- PORTÃO SECRETO -->
+<div id="gate">
+  <input type="password" id="password" placeholder="">
   <br>
   <button onclick="check()">Unlock</button>
+</div>
 
-  <!-- COMPORTAMENTO -->
-  <script>
-    function check() {
-      const input = document.getElementById("password").value;
+<!-- OLHO -->
+<div id="eye"></div>
 
-      // SENHA 1 — três espaços
-      if (input === "   ") {
-        window.location.href = "secret.html";
-      }
+<script>
+  const eye = document.getElementById("eye");
+  const gate = document.getElementById("gate");
+  const warning = document.getElementById("warning");
 
-      // SENHA 2 — caminho alternativo
-      else if (input === "Defeat the banana threat, take it to the kingdom of darkness, the best resort to rest.") {
-        window.location.href = "banana.html";
-      }
+  // OLHO ATIVA O CAMPO SECRETO
+  eye.addEventListener("click", () => {
+    gate.style.display = "block";
+    eye.style.display = "none";
+    warning.innerText = "Observation acknowledged.";
+  });
 
-      // SENHA 3 — punição / vazio
-      else if (input === "wisemonkey") {
-        window.location.href = "void.html";
-      }
+  function check() {
+    const value = document.getElementById("password").value;
 
-      // QUALQUER OUTRA COISA
-      else {
-        document.getElementById("warning").innerText =
-          "Access denied.";
-      }
+    // PROFECIA
+    if (value === "Numquam de bananis et simlis agebat ur") {
+      window.location.href = "prophecy.html";
     }
 
-    // muda a mensagem após 5 segundos
-    setTimeout(() => {
-      document.getElementById("warning").innerText =
-        "Why are you here?";
-    }, 5000);
-  </script>
+    // OUTROS CAMINHOS
+    else if (value === "   ") {
+      window.location.href = "secret.html";
+    }
+    else if (value === "Defeat the banana threat, take it to the kingdom of darkness, the best resort to rest.") {
+      window.location.href = "banana.html";
+    }
+    else if (value === "wisemonkey") {
+      window.location.href = "void.html";
+    }
+
+    // ERRO
+    else {
+      warning.innerText = "Access denied.";
+    }
+  }
+
+  // MENSAGEM MUDA SOZINHA
+  setTimeout(() => {
+    warning.innerText = "Why are you here?";
+  }, 5000);
+</script>
 
 </body>
 </html>

@@ -1,1 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>void</title>
 
+<style>
+  body {
+    background-color: black;
+    color: white;
+    font-family: monospace;
+    overflow: hidden;
+    text-align: center;
+  }
+
+  /* TEXTO BUGADO */
+  .glitch {
+    position: relative;
+    font-size: 2em;
+    margin-top: 30vh;
+    animation: flicker 0.15s infinite;
+  }
+
+  .glitch::before,
+  .glitch::after {
+    content: attr(data-text);
+    position: absolute;
+    left: 0;
+    width: 100%;
+    opacity: 0.8;
+  }
+
+  .glitch::before {
+    color: red;
+    animation: glitch1 0.2s infinite;
+  }
+
+  .glitch::after {
+    color: cyan;
+    animation: glitch2 0.25s infinite;
+  }
+
+  @keyframes glitch1 {
+    0% { transform: translate(2px, -2px); }
+    50% { transform: translate(-2px, 2px); }
+    100% { transform: translate(2px, -2px); }
+  }
+
+  @keyframes glitch2 {
+    0% { transform: translate(-2px, 2px); }
+    50% { transform: translate(2px, -2px); }
+    100% { transform: translate(-2px, 2px); }
+  }
+
+  @keyframes flicker {
+    0% { opacity: 1; }
+    50% { opacity: 0.3; }
+    100% { opacity: 1; }
+  }
+
+  /* MENSAGEM ESCONDIDA */
+  #hidden {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    font-size: 0.6em;
+    opacity: 0.05;
+    transform: rotate(180deg);
+  }
+
+  /* INDÍCIO DE MENTIRA */
+  #lie {
+    margin-top: 40px;
+    font-size: 0.9em;
+    opacity: 0.4;
+    animation: shake 0.3s infinite;
+  }
+
+  @keyframes shake {
+    0% { transform: translateX(0); }
+    25% { transform: translateX(-2px); }
+    50% { transform: translateX(2px); }
+    75% { transform: translateX(-2px); }
+    100% { transform: translateX(0); }
+  }
+
+  /* INTERFERÊNCIA */
+  canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+  }
+</style>
+</head>
+
+<body>
+
+  <!-- MENSAGEM CLARA (MAS MENTIROSA) -->
+  <div class="glitch" data-text="That's not the way. The banana is your friend.">
+    That's not the way. The banana is your friend.
+  </div>
+
+  <!-- INDÍCIO DE QUE É MENTIRA -->
+  <div id="lie">
+    SIGNAL CORRUPTED · SOURCE UNVERIFIED
+  </div>
+
+  <!-- MENSAGEM ESCONDIDA -->
+  <div id="hidden">
+    the wise was never an enemy, but the being from the kingdom of darkness wants your harm
+  </div>
+
+  <!-- RUÍDO VISUAL -->
+  <canvas id="noise"></canvas>
+
+<script>
+  const canvas = document.getElementById("noise");
+  const ctx = canvas.getContext("2d");
+
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  function noise() {
+    const imgData = ctx.createImageData(canvas.width, canvas.height);
+    for (let i = 0; i < imgData.data.length; i += 4) {
+      const val = Math.random() * 255;
+      imgData.data[i] = val;
+      imgData.data[i + 1] = val;
+      imgData.data[i + 2] = val;
+      imgData.data[i + 3] = 20;
+    }
+    ctx.putImageData(imgData, 0, 0);
+  }
+
+  setInterval(noise, 100);
+</script>
+
+</body>
+</html>

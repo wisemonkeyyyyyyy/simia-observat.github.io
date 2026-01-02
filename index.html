@@ -3,33 +3,86 @@
 <head>
   <meta charset="UTF-8">
   <title>Access</title>
-</head>
-<body>
-<p id="warning">
-x8_-y6qpiY1Rmb2PJDtn19CJdilfOWAuQ24adMvpy6W_jJxtB25dvJtJm_ysDinW8d1G553JYPVuOELVAbaCs6W9MFod_RUROGT5VGtFCju_78x5gzD78DxABmDtEXN3
-</p>
-  <h2>Enter the password</h2>
 
+  <style>
+    body {
+      background-color: black;
+      color: white;
+      font-family: monospace;
+      text-align: center;
+      margin-top: 30vh;
+    }
+
+    input {
+      background: black;
+      color: white;
+      border: 1px solid white;
+      padding: 8px;
+      margin-top: 15px;
+    }
+
+    button {
+      margin-top: 10px;
+      padding: 8px 16px;
+      background: black;
+      color: white;
+      border: 1px solid white;
+      cursor: pointer;
+    }
+
+    #warning {
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- TEXTO INICIAL / MENSAGEM -->
+  <p id="warning">
+    x8_-y6qpiY1Rmb2PJDtn19CJdilfOWAuQ24adMvpy6W_jJxtB25dvJtJm_ysDinW8d1G553JYPVuOELVAbaCs6W9MFod_RUROGT5VGtFCju_78x5gzD78DxABmDtEXN3
+  </p>
+
+  <h2>Enter password</h2>
+
+  <!-- CAMPO DE SENHA -->
   <input type="password" id="password">
+  <br>
   <button onclick="check()">Unlock</button>
 
+  <!-- COMPORTAMENTO -->
   <script>
     function check() {
-      const correctPassword = "   "; // 3 espaços
       const input = document.getElementById("password").value;
 
-      if (input === correctPassword) {
+      // SENHA 1 — três espaços
+      if (input === "   ") {
         window.location.href = "secret.html";
-      } else {
-        alert("Access denied.");
+      }
+
+      // SENHA 2 — caminho alternativo
+      else if (input === "Defeat the banana threat, take it to the kingdom of darkness, the best resort to rest.") {
+        window.location.href = "banana.html";
+      }
+
+      // SENHA 3 — punição / vazio
+      else if (input === "wisemonkey") {
+        window.location.href = "void.html";
+      }
+
+      // QUALQUER OUTRA COISA
+      else {
+        document.getElementById("warning").innerText =
+          "Access denied.";
       }
     }
+
+    // muda a mensagem após 5 segundos
+    setTimeout(() => {
+      document.getElementById("warning").innerText =
+        "Why are you here?";
+    }, 5000);
   </script>
-<script>
-  setTimeout(() => {
-    document.getElementById("warning").innerText =
-      "why are you here?";
-  }, 5000);
-</script>
+
 </body>
 </html>

@@ -18,7 +18,6 @@
     margin-bottom: 20px;
   }
 
-  /* ===== CAMPO SECRETO ===== */
   #gate {
     display: none;
   }
@@ -67,14 +66,26 @@
     box-shadow: 0 0 15px red;
   }
 
-  /* VINHETA MACABRA */
+  /* TREMOR */
+  .tremble {
+    animation: tremble 0.1s infinite;
+  }
+
+  @keyframes tremble {
+    0%   { transform: translate(-50%, -50%) translate(0, 0); }
+    25%  { transform: translate(-50%, -50%) translate(-1px, 1px); }
+    50%  { transform: translate(-50%, -50%) translate(1px, -1px); }
+    75%  { transform: translate(-50%, -50%) translate(-1px, -1px); }
+    100% { transform: translate(-50%, -50%) translate(1px, 1px); }
+  }
+
+  /* VINHETA */
   #vignette {
     position: fixed;
     inset: 0;
     pointer-events: none;
     box-shadow: inset 0 0 120px black;
   }
-
 </style>
 </head>
 
@@ -84,14 +95,12 @@
 x8_-y6qpiY1Rmb2PJDtn19CJdilfOWAuQ24adMvpy6W_jJxtB25dvJtJm_ysDinW8d1G553JYPVuOELVAbaCs6W9MFod_RUROGT5VGtFCju_78x5gzD78DxABmDtEXN3
 </p>
 
-<!-- CAMPO SECRETO -->
 <div id="gate">
   <input type="password" id="password">
   <br>
   <button onclick="check()">Unlock</button>
 </div>
 
-<!-- OLHO -->
 <div id="eye">
   <div id="pupil"></div>
 </div>
@@ -113,14 +122,11 @@ x8_-y6qpiY1Rmb2PJDtn19CJdilfOWAuQ24adMvpy6W_jJxtB25dvJtJm_ysDinW8d1G553JYPVuOELV
     const angle = Math.atan2(e.clientY - eyeY, e.clientX - eyeX);
     const distance = 6;
 
-    const x = Math.cos(angle) * distance;
-    const y = Math.sin(angle) * distance;
-
     pupil.style.transform =
-      `translate(-50%, -50%) translate(${x}px, ${y}px)`;
+      `translate(-50%, -50%) translate(${Math.cos(angle)*distance}px, ${Math.sin(angle)*distance}px)`;
   });
 
-  // ATIVA PORTÃO AO CLICAR
+  // ATIVA PORTÃO
   eye.addEventListener("click", () => {
     gate.style.display = "block";
     warning.innerText = "It noticed you.";
@@ -129,9 +135,17 @@ x8_-y6qpiY1Rmb2PJDtn19CJdilfOWAuQ24adMvpy6W_jJxtB25dvJtJm_ysDinW8d1G553JYPVuOELV
   function check() {
     const value = document.getElementById("password").value;
 
+    // SENHA DA PROFECIA
     if (value === "Numquam de bananis et simlis agebat ur") {
-      window.location.href = "prophecy.html";
+      warning.innerText = "The eye recognizes the phrase.";
+      pupil.classList.add("tremble");
+
+      // atraso narrativo
+      setTimeout(() => {
+        window.location.href = "prophecy.html";
+      }, 1200);
     }
+
     else if (value === "   ") {
       window.location.href = "secret.html";
     }

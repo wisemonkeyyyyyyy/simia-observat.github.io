@@ -10,54 +10,91 @@
     color: #2b2b2b;
     font-family: monospace;
     text-align: center;
-    margin-top: 25vh;
+    margin-top: 24vh;
+    overflow: hidden;
+  }
+
+  /* TEXTURA DE VÍDEO ANTIGO */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background:
+      repeating-linear-gradient(
+        0deg,
+        rgba(0,0,0,0.025),
+        rgba(0,0,0,0.025) 1px,
+        transparent 1px,
+        transparent 2px
+      );
+    pointer-events: none;
   }
 
   h1 {
     color: #d4aa00;
-    font-size: 2.5em;
+    font-size: 2.6em;
+    animation: fade 10s infinite alternate;
   }
 
   #main {
     font-size: 1.1em;
-    margin-top: 20px;
+    margin-top: 22px;
   }
 
   #reassure {
-    margin-top: 30px;
+    margin-top: 32px;
     font-size: 0.9em;
     color: #666;
   }
 
-  /* texto quase invisível */
-  #hidden {
-    margin-top: 60px;
-    font-size: 0.6em;
-    color: #fffbe6; /* mesma cor do fundo */
-    user-select: text;
-  }
-
-  /* detalhe inquietante */
-  #small {
-    margin-top: 40px;
-    font-size: 0.7em;
-    opacity: 0.3;
-  }
-
-  @keyframes blink {
-    0%, 97%, 100% { opacity: 1; }
-    98% { opacity: 0; }
-  }
-
   #blink {
-    animation: blink 6s infinite;
+    margin-top: 18px;
+    animation: blink 7s infinite;
+  }
+
+  #small {
+    margin-top: 45px;
+    font-size: 0.7em;
+    opacity: 0.28;
+  }
+
+  /* TEXTO ESCONDIDO (BASE64) */
+  #hidden {
+    position: absolute;
+    bottom: 8px;
+    right: 12px;
+    font-size: 0.55em;
+    color: #fffbe6;
+    user-select: text;
+    transform: rotate(180deg);
+  }
+
+  /* ANIMAÇÕES */
+  @keyframes blink {
+    0%, 96%, 100% { opacity: 1; }
+    97% { opacity: 0; }
+  }
+
+  @keyframes fade {
+    from { opacity: 1; }
+    to { opacity: 0.85; }
+  }
+
+  /* DESALINHAMENTO SUTIL */
+  .drift {
+    animation: drift 18s infinite alternate;
+  }
+
+  @keyframes drift {
+    from { letter-spacing: 0px; }
+    to { letter-spacing: 1.2px; }
   }
 </style>
 </head>
 
 <body>
 
-  <h1>🍌</h1>
+  <h1 class="drift">🍌</h1>
 
   <p id="main">
     You chose the correct path.
@@ -75,12 +112,13 @@
     Friends do not need to insist.
   </p>
 
-  <!-- FRASE ESCONDIDA -->
+  <!-- BASE64 ESCONDIDO -->
   <p id="hidden">
     aHR0cHM6Ly95b3V0dS5iZS80VzI4VzVGd1hxQT9zaT1Vci0tMkxqN2RkVFZSNGU=
   </p>
 
 <script>
+  // Micro-contradições
   setTimeout(() => {
     document.getElementById("reassure").innerText =
       "The banana only wants to protect you.";
@@ -88,8 +126,19 @@
 
   setTimeout(() => {
     document.getElementById("small").innerText =
-      "Protection sometimes requires silence.";
+      "Protection does not require understanding.";
   }, 16000);
+
+  setTimeout(() => {
+    document.getElementById("blink").innerText =
+      "Nothing here has ever harmed anyone.";
+  }, 23000);
+
+  // Pequeno erro de memória
+  setTimeout(() => {
+    document.getElementById("main").innerText =
+      "Perhaps further searching is necessary.";
+  }, 30000);
 </script>
 
 </body>

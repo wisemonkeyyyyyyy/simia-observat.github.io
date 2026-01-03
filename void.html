@@ -5,205 +5,157 @@
 <title>void</title>
 
 <style>
-  body {
-    background-color: black;
-    color: white;
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: black;
+    color: #777;
     font-family: monospace;
-    overflow: hidden;
-    text-align: center;
-    transition: background-color 0.05s, filter 0.2s;
-  }
-
-  /* TEXTO PRINCIPAL BUGADO */
-  .glitch {
-    position: relative;
-    font-size: 2em;
-    margin-top: 30vh;
-    animation: flicker 0.12s infinite;
-  }
-
-  .glitch::before,
-  .glitch::after {
-    content: attr(data-text);
-    position: absolute;
-    left: 0;
     width: 100%;
-    opacity: 0.8;
+    height: 100%;
+    overflow: hidden;
   }
 
-  .glitch::before {
-    color: red;
-    animation: glitch1 0.15s infinite;
-  }
-
-  .glitch::after {
-    color: cyan;
-    animation: glitch2 0.18s infinite;
-  }
-
-  @keyframes glitch1 {
-    0% { transform: translate(3px, -3px); }
-    50% { transform: translate(-3px, 3px); }
-    100% { transform: translate(3px, -3px); }
-  }
-
-  @keyframes glitch2 {
-    0% { transform: translate(-3px, 3px); }
-    50% { transform: translate(3px, -3px); }
-    100% { transform: translate(-3px, 3px); }
-  }
-
-  @keyframes flicker {
-    0% { opacity: 1; }
-    50% { opacity: 0.2; }
-    100% { opacity: 1; }
-  }
-
-  /* INDÍCIO DE MENTIRA */
-  #lie {
-    margin-top: 40px;
-    font-size: 0.9em;
-    opacity: 0.4;
-    animation: shake 0.25s infinite;
-  }
-
-  @keyframes shake {
-    0% { transform: translateX(0); }
-    25% { transform: translateX(-3px); }
-    50% { transform: translateX(3px); }
-    75% { transform: translateX(-3px); }
-    100% { transform: translateX(0); }
-  }
-
-  /* MENSAGEM ESCONDIDA */
-  #hidden {
-    position: absolute;
-    bottom: 5px;
-    right: 5px;
-    font-size: 0.6em;
-    opacity: 0.04;
-    transform: rotate(180deg);
-  }
-
-  /* RUÍDO */
-  canvas {
+  /* TEXTO */
+  #text {
     position: fixed;
-    top: 0;
-    left: 0;
+    bottom: 30px;
+    width: 100%;
+    text-align: center;
+    font-size: 0.75em;
+    opacity: 0.35;
+    letter-spacing: 0.05em;
+  }
+
+  /* ENTIDADE */
+  #entity {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     pointer-events: none;
+  }
+
+  /* OLHO */
+  #eye {
+    width: 220px;
+    height: 120px;
+    background: radial-gradient(
+      ellipse at center,
+      #0b0b0b 0%,
+      #000 75%
+    );
+    border-radius: 50%;
+    box-shadow:
+      0 0 45px rgba(255,255,255,0.04),
+      inset 0 0 70px rgba(0,0,0,0.95);
+    position: relative;
+    filter: blur(0.4px);
+    transition: transform 0.35s ease-out;
+  }
+
+  /* PUPILA / ÍRIS */
+  #eye::before {
+    content: "";
+    position: absolute;
+    inset: 18%;
+    background: radial-gradient(
+      circle at center,
+      #000 0%,
+      #000 65%,
+      #111 100%
+    );
+    border-radius: 50%;
+  }
+
+  /* REFLEXOS */
+  .shine {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.85);
+    box-shadow: 0 0 6px rgba(255,255,255,0.6);
+  }
+
+  .shine.left {
+    width: 6px;
+    height: 6px;
+    top: 42%;
+    left: 46%;
+  }
+
+  .shine.right {
+    width: 4px;
+    height: 4px;
+    top: 48%;
+    left: 55%;
+    opacity: 0.7;
+  }
+
+  /* RESPIRAÇÃO SUTIL */
+  @keyframes breathe {
+    0%   { transform: scale(1); }
+    50%  { transform: scale(1.015); }
+    100% { transform: scale(1); }
+  }
+
+  #eye {
+    animation: breathe 7s infinite ease-in-out;
   }
 </style>
 </head>
 
 <body>
 
-  <div class="glitch" data-text="That's not the way. The banana is your friend.">
-    That's not the way. The banana is your friend.
+  <!-- ENTIDADE OBSERVADORA -->
+  <div id="entity">
+    <div id="eye">
+      <div class="shine left"></div>
+      <div class="shine right"></div>
+    </div>
   </div>
 
-  <div id="lie">
-    SIGNAL CORRUPTED · SOURCE UNVERIFIED
+  <!-- TEXTO NARRATIVO -->
+  <div id="text">
+    you are not lost.<br>
+    you are early.
   </div>
-
-  <div id="hidden">
-    He was never an enemy, but the being from the kingdom of darkness wants your harm
-  </div>
-
-  <canvas id="noise"></canvas>
 
 <script>
-  /* ===== RUÍDO VISUAL ===== */
-  const canvas = document.getElementById("noise");
-  const ctx = canvas.getContext("2d");
+  const eye = document.getElementById("eye");
 
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
+  let targetX = 0;
+  let targetY = 0;
+  let currentX = 0;
+  let currentY = 0;
 
-  function noise() {
-    const imgData = ctx.createImageData(canvas.width, canvas.height);
-    for (let i = 0; i < imgData.data.length; i += 4) {
-      const val = Math.random() * 255;
-      imgData.data[i] = val;
-      imgData.data[i + 1] = val;
-      imgData.data[i + 2] = val;
-      imgData.data[i + 3] = 30;
-    }
-    ctx.putImageData(imgData, 0, 0);
+  document.addEventListener("mousemove", (e) => {
+    targetX = (e.clientX / window.innerWidth - 0.5) * 10;
+    targetY = (e.clientY / window.innerHeight - 0.5) * 6;
+  });
+
+  function follow() {
+    currentX += (targetX - currentX) * 0.05;
+    currentY += (targetY - currentY) * 0.05;
+
+    eye.style.transform =
+      `translate(${currentX}px, ${currentY}px)`;
+
+    requestAnimationFrame(follow);
   }
 
-  setInterval(noise, 80);
+  follow();
 
-  /* ===== CORRUPÇÃO PROGRESSIVA ===== */
-  let corruption = 0;
-  let collapsed = false;
+  /* TEXTO EVOLUI COM O TEMPO */
+  setTimeout(() => {
+    document.getElementById("text").innerText =
+      "it has noticed you.";
+  }, 20000);
 
-  const corruptionInterval = setInterval(() => {
-    if (collapsed) return;
-
-    corruption++;
-
-    // distorção visual
-    document.body.style.filter =
-      `contrast(${1 + corruption * 0.25}) 
-       saturate(${1 + corruption * 0.35}) 
-       hue-rotate(${corruption * 12}deg)`;
-
-    // flash branco de 1 frame
-    document.body.style.backgroundColor = "white";
-    setTimeout(() => {
-      document.body.style.backgroundColor = "black";
-    }, 30);
-
-    if (corruption >= 6) {
-      clearInterval(corruptionInterval);
-      finalCollapse();
-    }
-  }, 2000); // MAIS RÁPIDO
-
-  /* ===== COLAPSO FINAL ===== */
-  function finalCollapse() {
-    collapsed = true;
-
-    const glitch = document.querySelector(".glitch");
-
-    const end = document.createElement("div");
-    end.innerText = "LANGUAGE FAILED";
-    end.style.position = "fixed";
-    end.style.top = "50%";
-    end.style.left = "50%";
-    end.style.transform = "translate(-50%, -50%)";
-    end.style.color = "red";
-    end.style.fontSize = "3em";
-    end.style.opacity = "0.85";
-    document.body.appendChild(end);
-
-    let text = glitch.innerText;
-
-    const erode = setInterval(() => {
-      if (text.length <= 3) {
-        glitch.innerText = "...";
-        clearInterval(erode);
-        return;
-      }
-      text = text.slice(0, -1);
-      glitch.innerText = text;
-    }, 250); // erosão rápida
-
-    setTimeout(() => {
-      document.body.innerHTML = "";
-      document.body.style.background = "black";
-
-      const last = document.createElement("div");
-      last.innerText = "OBSERVATION WITHOUT INTERFACE";
-      last.style.color = "white";
-      last.style.opacity = "0.4";
-      last.style.fontFamily = "monospace";
-      last.style.position = "fixed";
-      last.style.bottom = "10px";
-      last.style.right = "10px";
-      document.body.appendChild(last);
-    }, 6000);
-  }
+  setTimeout(() => {
+    document.getElementById("text").innerText =
+      "leaving does not undo observation.";
+  }, 40000);
 </script>
 
 </body>

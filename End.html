@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>void acknowledges</title>
+
+  <style>
+    body {
+      margin: 0;
+      background: black;
+      color: #bfbfbf;
+      font-family: monospace;
+      overflow: hidden;
+      cursor: default;
+    }
+
+    /* leve ruído */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        rgba(255,255,255,0.02),
+        rgba(255,255,255,0.02) 1px,
+        transparent 1px,
+        transparent 2px
+      );
+      pointer-events: none;
+      opacity: 0.2;
+    }
+
+    /* mensagem principal */
+    #void-message {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      font-size: 0.8em;
+      opacity: 0;
+      transition: opacity 2.5s ease;
+      color: #cfcfcf;
+      pointer-events: none;
+    }
+
+    /* texto residual quase invisível */
+    #residue {
+      position: fixed;
+      top: 15px;
+      right: 20px;
+      font-size: 0.6em;
+      opacity: 0.15;
+    }
+
+    /* observação silenciosa */
+    #observe {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 0.7em;
+      opacity: 0.05;
+      letter-spacing: 2px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- RESÍDUO DO VOID -->
+  <div id="residue">process ongoing</div>
+
+  <!-- OBSERVAÇÃO -->
+  <div id="observe">OBSERVING</div>
+
+  <!-- MENSAGEM TEMPORÁRIA -->
+  <div id="void-message">
+    Thank you for getting this far.
+  </div>
+
+  <script>
+    // atraso proposital (o Void decide quando falar)
+    setTimeout(() => {
+      document.getElementById("void-message").style.opacity = "0.65";
+    }, 5000);
+
+    // o Void se cala novamente
+    setTimeout(() => {
+      document.getElementById("void-message").style.opacity = "0";
+    }, 11000);
+
+    // leve alteração para desconforto temporal
+    setInterval(() => {
+      const obs = document.getElementById("observe");
+      obs.style.opacity = Math.random() * 0.08;
+    }, 1200);
+  </script>
+
+</body>
+</html>

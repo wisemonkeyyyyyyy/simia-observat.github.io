@@ -1,99 +1,121 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>void acknowledges</title>
+<meta charset="UTF-8">
+<title>void</title>
 
-  <style>
-    body {
-      margin: 0;
-      background: black;
-      color: #bfbfbf;
-      font-family: monospace;
-      overflow: hidden;
-      cursor: default;
-    }
+<style>
+  body {
+    background-color: black;
+    color: #bfbfbf;
+    font-family: monospace;
+    text-align: center;
+    overflow: hidden;
+  }
 
-    /* leve ruído */
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      background: repeating-linear-gradient(
-        0deg,
-        rgba(255,255,255,0.02),
-        rgba(255,255,255,0.02) 1px,
-        transparent 1px,
-        transparent 2px
-      );
-      pointer-events: none;
-      opacity: 0.2;
-    }
+  #container {
+    position: absolute;
+    top: 45%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80%;
+    max-width: 700px;
+  }
 
-    /* mensagem principal */
-    #void-message {
-      position: fixed;
-      bottom: 20px;
-      left: 20px;
-      font-size: 0.8em;
-      opacity: 0;
-      transition: opacity 2.5s ease;
-      color: #cfcfcf;
-      pointer-events: none;
-    }
+  p {
+    opacity: 0;
+    transition: opacity 2s ease;
+    line-height: 1.6;
+  }
 
-    /* texto residual quase invisível */
-    #residue {
-      position: fixed;
-      top: 15px;
-      right: 20px;
-      font-size: 0.6em;
-      opacity: 0.15;
-    }
+  #thanks {
+    color: #ffffff;
+    font-size: 1.1em;
+  }
 
-    /* observação silenciosa */
-    #observe {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      font-size: 0.7em;
-      opacity: 0.05;
-      letter-spacing: 2px;
-    }
-  </style>
+  #philosophy {
+    margin-top: 30px;
+    font-size: 0.9em;
+    color: #9a9a9a;
+  }
+
+  #signature {
+    margin-top: 50px;
+    font-size: 0.75em;
+    opacity: 0.3;
+    font-style: italic;
+  }
+
+  /* leve vinheta */
+  #vignette {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    box-shadow: inset 0 0 180px black;
+  }
+
+  /* ruído sutil */
+  body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    opacity: 0.08;
+    pointer-events: none;
+  }
+</style>
 </head>
 
 <body>
 
-  <!-- RESÍDUO DO VOID -->
-  <div id="residue">process ongoing</div>
+<div id="container">
 
-  <!-- OBSERVAÇÃO -->
-  <div id="observe">OBSERVING</div>
-
-  <!-- MENSAGEM TEMPORÁRIA -->
-  <div id="void-message">
+  <p id="thanks">
     Thank you for getting this far.
-  </div>
+  </p>
 
-  <script>
-    // atraso proposital (o Void decide quando falar)
-    setTimeout(() => {
-      document.getElementById("void-message").style.opacity = "0.65";
-    }, 5000);
+  <p id="philosophy">
+    Some paths cannot be followed forever.<br>
+    Not everything is meant to be completed.<br><br>
 
-    // o Void se cala novamente
-    setTimeout(() => {
-      document.getElementById("void-message").style.opacity = "0";
-    }, 11000);
+    The past does not wait.<br>
+    The future does not ask.<br><br>
 
-    // leve alteração para desconforto temporal
-    setInterval(() => {
-      const obs = document.getElementById("observe");
-      obs.style.opacity = Math.random() * 0.08;
-    }, 1200);
-  </script>
+    Meaning was never hidden.<br>
+    Only postponed by symbols.
+  </p>
+
+  <p id="signature">
+    — it observed you
+  </p>
+
+</div>
+
+<div id="vignette"></div>
+
+<script>
+  const thanks = document.getElementById("thanks");
+  const philosophy = document.getElementById("philosophy");
+  const signature = document.getElementById("signature");
+
+  // aparece a mensagem de agradecimento
+  setTimeout(() => {
+    thanks.style.opacity = "1";
+  }, 1500);
+
+  // some após alguns segundos
+  setTimeout(() => {
+    thanks.style.opacity = "0";
+  }, 6000);
+
+  // texto filosófico surge depois
+  setTimeout(() => {
+    philosophy.style.opacity = "1";
+  }, 8000);
+  setTimeout(() => {
+    signature.style.opacity = "1";
+  }, 12000);
+</script>
 
 </body>
 </html>

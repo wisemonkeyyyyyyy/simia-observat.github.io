@@ -7,50 +7,77 @@
 <style>
   body {
     background-color: black;
-    color: white;
+    color: #e6e6e6;
     font-family: monospace;
     text-align: center;
-    margin-top: 30vh;
+    margin-top: 28vh;
     overflow: hidden;
+    letter-spacing: 0.5px;
   }
 
+  /* TEXTO PRINCIPAL */
   #warning {
     margin-bottom: 20px;
+    opacity: 0.9;
+    animation: flicker 3s infinite;
   }
 
+  @keyframes flicker {
+    0% { opacity: 0.9; }
+    5% { opacity: 0.4; }
+    10% { opacity: 0.9; }
+    100% { opacity: 0.9; }
+  }
+
+  /* PORTÃO */
   #gate {
     display: none;
+    margin-top: 10px;
   }
 
   input {
     background: black;
     color: white;
-    border: 1px solid white;
+    border: 1px solid #666;
     padding: 8px;
     margin-top: 15px;
+    font-family: monospace;
   }
 
   button {
     margin-top: 10px;
     padding: 6px 14px;
     background: black;
-    color: white;
-    border: 1px solid white;
+    color: #ccc;
+    border: 1px solid #555;
     cursor: pointer;
+    font-family: monospace;
+  }
+
+  button:hover {
+    color: white;
+    border-color: #888;
   }
 
   /* ===== OLHO ===== */
   #eye {
     position: fixed;
-    bottom: 30px;
-    left: 30px;
-    width: 70px;
+    bottom: 26px;
+    left: 26px;
+    width: 72px;
     height: 34px;
-    border: 2px solid red;
+    border: 2px solid #b00000;
     border-radius: 50%;
     opacity: 0.85;
-    box-shadow: 0 0 30px red;
+    box-shadow: 0 0 30px #b00000;
     cursor: pointer;
+    animation: pulse 4s infinite;
+  }
+
+  @keyframes pulse {
+    0% { opacity: 0.7; }
+    50% { opacity: 0.9; }
+    100% { opacity: 0.7; }
   }
 
   /* PUPILA */
@@ -60,10 +87,10 @@
     left: 50%;
     width: 12px;
     height: 12px;
-    background: red;
+    background: #b00000;
     border-radius: 50%;
     transform: translate(-50%, -50%);
-    box-shadow: 0 0 18px red;
+    box-shadow: 0 0 18px #b00000;
   }
 
   /* TREMOR */
@@ -84,7 +111,38 @@
     position: fixed;
     inset: 0;
     pointer-events: none;
-    box-shadow: inset 0 0 140px black;
+    box-shadow: inset 0 0 180px black;
+  }
+
+  /* SCANLINES */
+  #scanlines {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background: repeating-linear-gradient(
+      to bottom,
+      rgba(255,255,255,0.02),
+      rgba(255,255,255,0.02) 1px,
+      transparent 1px,
+      transparent 3px
+    );
+    opacity: 0.15;
+  }
+
+  /* RUÍDO LEVE */
+  #noise {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    animation: noise 0.4s infinite;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='1'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    opacity: 0.03;
+  }
+
+  @keyframes noise {
+    0% { opacity: 0.02; }
+    50% { opacity: 0.04; }
+    100% { opacity: 0.02; }
   }
 </style>
 </head>
@@ -106,6 +164,8 @@ x8_-y6qpiY1Rmb2PJDtn19CJdilfOWAuQ24adMvpy6W_jJxtB25dvJtJm_ysDinW8d1G553JYPVuOELV
 </div>
 
 <div id="vignette"></div>
+<div id="scanlines"></div>
+<div id="noise"></div>
 
 <script>
   const eye = document.getElementById("eye");
@@ -113,7 +173,6 @@ x8_-y6qpiY1Rmb2PJDtn19CJdilfOWAuQ24adMvpy6W_jJxtB25dvJtJm_ysDinW8d1G553JYPVuOELV
   const gate = document.getElementById("gate");
   const warning = document.getElementById("warning");
 
-  // OLHO SEGUE O CURSOR
   document.addEventListener("mousemove", (e) => {
     const rect = eye.getBoundingClientRect();
     const eyeX = rect.left + rect.width / 2;
@@ -126,7 +185,6 @@ x8_-y6qpiY1Rmb2PJDtn19CJdilfOWAuQ24adMvpy6W_jJxtB25dvJtJm_ysDinW8d1G553JYPVuOELV
       `translate(-50%, -50%) translate(${Math.cos(angle)*distance}px, ${Math.sin(angle)*distance}px)`;
   });
 
-  // ATIVA PORTÃO
   eye.addEventListener("click", () => {
     gate.style.display = "block";
     warning.innerText = "It noticed you.";
@@ -135,7 +193,6 @@ x8_-y6qpiY1Rmb2PJDtn19CJdilfOWAuQ24adMvpy6W_jJxtB25dvJtJm_ysDinW8d1G553JYPVuOELV
   function check() {
     const value = document.getElementById("password").value;
 
-    // PROFECIA — observação
     if (value === "Numquam de bananis et simlis agebat ur") {
       warning.innerText = "The eye recognizes the phrase.";
       pupil.classList.add("tremble");
@@ -143,25 +200,18 @@ x8_-y6qpiY1Rmb2PJDtn19CJdilfOWAuQ24adMvpy6W_jJxtB25dvJtJm_ysDinW8d1G553JYPVuOELV
         window.location.href = "prophecy.html";
       }, 1200);
     }
-
-    // BANANA — certeza falsa / culto
-    else if (value === "Defeat the banana threat, take it to the kingdom of darkness, the best resort to rest") {
-      warning.innerText = "Guidance accepted.";
+    else if (value === "Defeat the banana threat, take it to the kingdom of darkness, the best resort to rest.") {
+      warning.innerText = "Look below the letters.";
       setTimeout(() => {
         window.location.href = "banana.html";
       }, 800);
     }
-
-    // CAMINHO TÉCNICO
     else if (value === "   ") {
       window.location.href = "secret.html";
     }
-
-    // VAZIO
     else if (value === "wisemonkey") {
       window.location.href = "void.html";
     }
-
     else {
       warning.innerText = "Access denied.";
     }

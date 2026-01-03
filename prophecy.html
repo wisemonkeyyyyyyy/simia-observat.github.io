@@ -7,14 +7,14 @@
 <style>
   body {
     background: #0b0b0b;
-    color: #d8d8d8;
+    color: #d6d6d6;
     font-family: monospace;
     padding: 40px;
-    line-height: 1.6;
+    line-height: 1.7;
     position: relative;
   }
 
-  /* TEXTURA DE SCAN */
+  /* EFEITO DE DOCUMENTO ESCANEADO */
   body::before {
     content: "";
     position: fixed;
@@ -22,55 +22,56 @@
     background:
       repeating-linear-gradient(
         0deg,
-        rgba(255,255,255,0.02),
-        rgba(255,255,255,0.02) 1px,
+        rgba(255,255,255,0.025),
+        rgba(255,255,255,0.025) 1px,
         transparent 1px,
         transparent 2px
       );
     pointer-events: none;
-    z-index: 1;
   }
 
-  /* VINHETA */
   body::after {
     content: "";
     position: fixed;
     inset: 0;
     box-shadow: inset 0 0 180px black;
     pointer-events: none;
-    z-index: 2;
   }
 
   h1 {
     text-align: center;
     letter-spacing: 2px;
     font-weight: normal;
+    opacity: 0.8;
   }
 
   .ancient {
     max-width: 650px;
-    margin: 60px auto;
+    margin: 70px auto;
     text-align: center;
-    z-index: 3;
-    position: relative;
   }
 
   .symbols {
-    font-size: 2.2em;
+    font-size: 2.4em;
     margin: 35px 0;
-    letter-spacing: 6px;
+    letter-spacing: 8px;
+  }
+
+  .ritual {
+    margin-top: 50px;
+    opacity: 0.75;
   }
 
   .note {
     font-size: 0.75em;
     opacity: 0.45;
-    margin-top: 60px;
+    margin-top: 70px;
     text-align: center;
   }
 
-  /* CAMPO DE SENHA */
+  /* PORTÃO */
   #gate {
-    margin-top: 80px;
+    margin-top: 90px;
     text-align: center;
     opacity: 0.6;
   }
@@ -79,75 +80,74 @@
     background: transparent;
     border: none;
     border-bottom: 1px solid #555;
-    color: #d8d8d8;
+    color: #d6d6d6;
     font-family: monospace;
     font-size: 1em;
     text-align: center;
     outline: none;
-    width: 180px;
+    width: 200px;
   }
 
-  input::placeholder {
-    color: #555;
-  }
-
-  /* LINK FINAL (OCULTO ATÉ ACERTAR) */
+  /* LINK FINAL */
   #final {
     display: none;
-    margin-top: 60px;
+    margin-top: 70px;
     font-size: 0.7em;
     opacity: 0.5;
+    text-align: center;
   }
 
   a {
-    color: #d8d8d8;
+    color: #d6d6d6;
     text-decoration: none;
-  }
-
-  a:hover {
-    opacity: 0.8;
   }
 </style>
 </head>
 
 <body>
 
-<h1>— recovered fragment —</h1>
+<h1>— fragmented prophecy —</h1>
 
 <div class="ancient">
 
   <p>
-    The record was incomplete.<br>
-    Only symbols remained.
+    The record speaks in sequence,<br>
+    not in names.
   </p>
+
+  <div class="ritual">
+    <p>First, observe.</p>
+    <p>Then, separate what must not remain.</p>
+    <p>What follows is darkness.</p>
+  </div>
 
   <div class="symbols">
     ○ △ ☽
   </div>
 
   <p>
-    Those who understood it<br>
-    did not speak it aloud.
+    The mistake was not the symbol.<br>
+    It was stopping too early.
   </p>
 
 </div>
 
 <div class="note">
-  Some knowledge unlocks nothing.<br>
-  Some knowledge unlocks everything.
+  Symbols were never meant to be spoken.<br>
+  Only repeated.
 </div>
 
-<!-- PORTÃO -->
+<!-- CAMPO DE SENHA -->
 <div id="gate">
   <input
     type="text"
     id="password"
-    placeholder="repeat the symbols"
+    placeholder="repeat the sequence"
     autocomplete="off"
   >
 </div>
 
-<!-- LINK FINAL -->
+<!-- LINK OCULTO -->
 <div id="final">
   <a href="https://youtu.be/x4ChIENfRmw?si=oRH_aKw_p5L_7veq" target="_blank">
     observation without interference
@@ -161,7 +161,7 @@
   input.addEventListener("input", () => {
     if (input.value.trim() === "○ △ ☽") {
       final.style.display = "block";
-      input.style.opacity = "0.2";
+      input.style.opacity = "0.25";
     }
   });
 </script>
